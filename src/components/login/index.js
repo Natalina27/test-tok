@@ -1,4 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { getToken } from '../../redux/reducer';
+
 const getData = async(token) => {
     const data = await fetch('https://api-nodejs-todolist.herokuapp.com/user/me',{
         method: "GET",
@@ -33,13 +36,15 @@ const fetchAPI = async (e,{email, password}) => {
 
 }
 
-export const Login = () => {
-
+const Login = ( props ) => {
+    console.log('login props', props);
+    props.getToken('hello!');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     return (
         <>
             <h1>Login</h1>
+            <div>{props.test}</div>
             <form onSubmit={(e)=>fetchAPI( e, {email, password})}>
                 <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)}/>
                 <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)}/>
@@ -49,3 +54,11 @@ export const Login = () => {
         </>
     );
 };
+
+const mapStateToProps = (state) => {
+    return {
+        test: state.reducer.test
+    }
+}
+
+export default connect ( mapStateToProps , { getToken })(Login);
